@@ -31,7 +31,6 @@ clear
 %height 
 Hc = 10;
 Yc = Hc;
-Cpos = 1;
 
 v = VideoReader('sample_video.mp4');
 left = zeros(1,4);
@@ -51,15 +50,13 @@ while hasFrame(v)
     plot([left(1),left(3)],[left(2),left(4)],'LineWidth',2,'Color','blue');
     plot([right(1),right(3)],[right(2),right(4)],'LineWidth',2,'Color','blue');
     
-%     mid = (left+right)/2;
-%     plot([mid(1),mid(3)],[mid(2),mid(4)],'LineWidth',2,'Color','blue');
-%     m = (mid(4)-mid(2))/(mid(3)-mid(1))
+    mid = (left+right)/2;
+    plot([mid(1),mid(3)],[mid(2),mid(4)],'LineWidth',2,'Color','blue');
+    m = (mid(4)-mid(2))/(mid(3)-mid(1))
     
 %     4. Inverse Projection
-    mid = inverseProjection(left, right, Yc);
+    [mid,theta] = inverseProjection(left, right, 10);
     
-%     5. Control
-    [phi,v] = control(mid, Cpos,k1,k2);
 
     pause(0.05);
     clf;
