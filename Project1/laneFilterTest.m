@@ -6,17 +6,17 @@
 % 
 % imshow(Ie);
 
-v = VideoReader('sample_video.mp4');
-while hasFrame(v)
-    video = readFrame(v);
-    imshow(video);
-end
+% v = VideoReader('sample_video.mp4');
+% while hasFrame(v)
+%     video = readFrame(v);
+%     imshow(video);
+% end
 
 
 
 %edge detection
-%pic = imread('../exit-ramp.jpg');
-pic = imread('highway-construction-service-500x500.jpg');
+pic = imread('exit-ramp.jpg');
+% pic = imread('highway-construction-service-500x500.jpg');
 shape = size(pic);
 gray_pic = rgb2gray(pic);
 edge_pic = edge(gray_pic,'canny',[0.31,0.36]);

@@ -1,5 +1,4 @@
 function [left, right] = Hough(pic)
-
 %edge detection
 shape = size(pic);
 gray_pic = rgb2gray(pic);
@@ -20,9 +19,9 @@ P=houghpeaks(H,3);
 lines = houghlines(BW,T,R,P,'FillGap',4,'MinLength',5);
 % imagesc(pic);
 % hold on;
-for i= 1:length(lines)
-    plot([lines(i).point1(1),lines(i).point2(1)],[lines(i).point1(2),lines(i).point2(2)],'LineWidth',2,'Color','red');
-end
+% for i= 1:length(lines)
+%     plot([lines(i).point1(1),lines(i).point2(1)],[lines(i).point1(2),lines(i).point2(2)],'LineWidth',2,'Color','red');
+% end
 
 %group lines with same theta
 thetas = [];
@@ -67,6 +66,5 @@ right = [sum(line(thetaNeg,1))/sum(thetaNeg), sum(line(thetaNeg,2))/sum(thetaNeg
             
 % plot([left(1),left(3)],[left(2),left(4)],'LineWidth',2,'Color','blue');
 % plot([right(1),right(3)],[right(2),right(4)],'LineWidth',2,'Color','blue');
-            
-
+  
 end
