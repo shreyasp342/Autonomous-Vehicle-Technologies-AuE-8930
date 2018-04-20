@@ -86,7 +86,9 @@ for rr = 1:r
             %             nss{ff,cc} = nn;
             fprintf("1 rand=%d\tcascade=%d\tfalse rate=%d\n",rr,cascades(cc),fAlarm(ff));
         end
-        b0{rr} = b000;
+        
+    end
+    b0{rr} = b000;
         b1{rr} = b111;
         bg1{rr} = bg111;
         stopSign{rr} = ss;
@@ -96,7 +98,6 @@ for rr = 1:r
         %         ng1{rr} = ng111;
         %         nstopSign{rr} = nss;
         clear b000 b111 bg111 ss n000 n111 ng111 nss
-    end
     clear stop test k
     
 end
@@ -158,12 +159,13 @@ for rr = 1:r
             fprintf("2negative class test rand=%d\tcascade=%d\tfalse rate=%d\n",rr,cascades(cc),fAlarm(ff));
         end
         
-        cn0{rr} = cn000;
+        
+    end
+    cn0{rr} = cn000;
         cn1{rr} = cn111;
         cng1{rr} = cng111;
         cnstopSign{rr} = cnss;
         clear b000 b111 bg111 ss cn000 cn111 cng111 cnss
-    end
     clear stop test k
     
 end
@@ -224,12 +226,13 @@ for rr = 1:r
             fprintf("3 stop class test rand=%d\tcascade=%d\tfalse rate=%d\n",rr,cascades(cc),fAlarm(ff));
         end
         
-        tn0{rr} = tn000;
+        
+    end
+    tn0{rr} = tn000;
         tn1{rr} = tn111;
         tng1{rr} = tng111;
         tnstopSign{rr} = tnss;
         clear b000 b111 bg111 ss tn000 tn111 tng111 tnss
-    end
     clear stop test k
     
 end
@@ -305,13 +308,13 @@ for rr = 1:r
             clear n00 n11 ng11 nn
             fprintf("4 negative train rand=%d\tcascade=%d\tfalse rate=%d\n",rr,cascades(cc),fAlarm(ff));
         end
+    end
         
         n0{rr} = n000;
         n1{rr} = n111;
         ng1{rr} = ng111;
         nstopSign{rr} = nss;
         clear b000 b111 bg111 ss n000 n111 ng111 nss
-    end
     clear stop test k
     
 end
