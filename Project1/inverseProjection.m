@@ -34,6 +34,8 @@ Zcn = (Rn(3)+Ln(3))/2;
 % Zcn = (Zrnc+Zlnc)/2;
 
 mid = [Xcf,Yc,Zcf;Xcn,Yc,Zcn];
+
+% 
 % clf
 % % figure;
 % hold on;
@@ -41,4 +43,6 @@ mid = [Xcf,Yc,Zcf;Xcn,Yc,Zcn];
 % plot([Lf(1),Ln(1)],[Lf(3),Ln(3)]);
 % plot([mid(1,1),mid(2,1)],[mid(1,3),mid(2,3)]);
 % pause(0.05);
+
+
 end

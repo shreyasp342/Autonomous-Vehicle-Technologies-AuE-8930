@@ -22,7 +22,8 @@ cameraParams = estimateCameraParameters(imagePoints,worldPoints, ...
 % Load image at new location.
 % imOrig = imread(fullfile(matlabroot,'toolbox','vision','visiondata', ...
 %     'calibration','slr','image9.jpg'));
-for i = 1:size(images.Files)
+% for i = 1:size(images.Files)
+i = 1;
 imOrig = imread(images.Files{i});
 % figure 
 % imshow(imOrig);
@@ -51,5 +52,5 @@ plotCamera('Location',location,'Orientation',orientation,'Size',20);
 hold on
 pcshow([worldPoints,zeros(size(worldPoints,1),1)], ...
   'VerticalAxisDir','down','MarkerSize',40);
-end
+% end
 
