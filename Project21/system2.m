@@ -8,7 +8,7 @@ close all
 % udpSystem2 = udp(IPsystem1,portSystem1,'LocalPort',portSystem2);
 % fopen(udpSystem2);
 
-cam = webcam(1);
+cam = webcam(2);
 cam.Resolution= '320x240';
 videoFrame= snapshot(cam);
 frameSize= size(videoFrame);
@@ -26,22 +26,24 @@ detectorSchool = vision.CascadeObjectDetector(xmlSchool);
 flagStop = false;
 flagSchool = false;
 flagNothing = false;
-
+ i = 0;
 while (1)
-    p=snapshot(cam);
-    sh=size(p);
-    p=imresize(p,0.25);
-    gray = rgb2gray(p);
+    videoFrame=snapshot(cam);
+    sh=size(videoFrame);
+%     videoFrame=imresize(videoFrame,0.25);
+    gray = rgb2gray(videoFrame);
     
-    bboxStop = step(detectorStop,gray);
-    bbStop = size(bboxStop,1);
-    videoFrameStop = insertObjectAnnotation(videoFrame,'rectangle',bboxStop,'stop sign');
-    step(videoPlayer, videoFrameStop);
+%     bboxStop = step(detectorStop,gray);
+%     bbStop = size(bboxStop,1);
+%     videoFrameStop = insertObjectAnnotation(videoFrame,'rectangle',bboxStop,'stop sign');
+%     step(videoPlayer, videoFrameStop);
+% clf
+%     imshow(videoFrameStop);
     
-%     bboxSchool = step(detectorSchool,gray);    
-%     bbSchool = size(bboxSchool,1);
-%     videoFrameSchool = insertObjectAnnotation(videoFrame,'rectangle',bboxSchool,'stop sign');
-%     step(videoPlayer, videoFrameSchool);
+    bboxSchool = step(detectorSchool,gray);    
+    bbSchool = size(bboxSchool,1);
+    videoFrameSchool = insertObjectAnnotation(videoFrame,'rectangle',bboxSchool,'school sign');
+    step(videoPlayer, videoFrameSchool);
     
 %     if(bbStop == 0 && bbSchool == 0)
 %         falgNothing = true;
