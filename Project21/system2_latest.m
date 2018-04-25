@@ -3,17 +3,17 @@ close all
 fclose(instrfindall);
 
 IPsystem1 = '198.21.234.24';
-IPsystem2 = '192.168.56.1';
+IPsystem2 = '198.21.198.61';
 portSystem1 = 9090;
 portSystem2 = 9091;
 udpSystem2 = udp(IPsystem1,portSystem1,'LocalPort',portSystem2);
 fopen(udpSystem2);
 
-cam = webcam(1);
+cam = webcam(2);
 cam.Resolution= '320x240';
-videoFrame= snapshot(cam);
-frameSize= size(videoFrame);
-videoPlayer= vision.VideoPlayer('Position', [100 100 [frameSize(2), frameSize(1)]+30]);
+% videoFrame= snapshot(cam);
+% frameSize= size(videoFrame);
+% videoPlayer= vision.VideoPlayer('Position', [100 100 [frameSize(2), frameSize(1)]+30]);
 
 falseStop = 0.1;
 cascadeStop = 10;
@@ -28,8 +28,9 @@ flagStop = false;
 flagSchool = false;
 flagNothing = false;
 flagArr = zeros(1,5);
-ii = 1
+ii = 1;
 while (1)
+%     ii = ii + 1
     videoFrame=snapshot(cam);
     sh=size(videoFrame);
     %     videoFrame=imresize(videoFrame,0.25);
@@ -49,59 +50,63 @@ while (1)
 % figure(01);
 % imshow(videoFrameSchool);
 % hold on;
-            videoFrame = insertObjectAnnotation(videoFrame,'rectangle',bboxStop,'stop sign','Color','cyan');  
-            videoFrame = insertObjectAnnotation(videoFrame,'rectangle',bboxSchool,'school sign','Color','yellow');
+%             videoFrame = insertObjectAnnotation(videoFrame,'rectangle',bboxStop,'stop sign','Color','cyan');  
+%             videoFrame = insertObjectAnnotation(videoFrame,'rectangle',bboxSchool,'school sign','Color','yellow');
 
 %% Corner detection within bounding box
     numStops = 0;
     numSchools = 0;
-    bboxStop1 = zeros(1,4);
-    bboxStop1(1,:) = [];
-    bboxSchool1 = bboxStop1;
+%     bboxStop1 = zeros(1,4);
+%     bboxStop1(1,:) = [];
+%     bboxSchool1 = bboxStop1;
     for i = 1:size(bboxStop,1)
         points = detectMinEigenFeatures(gray, 'ROI', bboxStop(i, :));
-        xyPoints1= points.Location;
-                    videoFrame = insertMarker(videoFrame,xyPoints1);
-        if size(xyPoints1,1) == 8
+        xyPointsS1= points.Location;
+%                     videoFrame = insertMarker(videoFrame,xyPointsS1);
+        if size(xyPointsS1,1) >40
             numStops = numStops +1;
-            bboxStop1 = [bboxStop1;bboxStop(i, :)];
+%             bboxStop1 = [bboxStop1;bboxStop(i, :)];
         end
     end
     for i = 1:size(bboxSchool,1)
         points = detectMinEigenFeatures(gray, 'ROI', bboxSchool(i, :));
         xyPoints2= points.Location;
-                    videoFrame = insertMarker(videoFrame,xyPoints2);
-        if size(xyPoints2,1) ==5
+%                     videoFrame = insertMarker(videoFrame,xyPoints2);
+%         if size(xyPoints2,1) >30
             numSchools = numSchools +1;
-            bboxSchool1 = [bboxSchool1;bboxSchool(i, :)];
-        end
+%             bboxSchool1 = [bboxSchool1;bboxSchool(i, :)];
+%         end
     end
-                    step(videoPlayer, videoFrame);
+%                     step(videoPlayer, videoFrame);
  
 %%
     if(numStops == 0 && numSchools == 0)
-        flagNothing = true;
+%         flagNothing = true;
         flagArr = [flagArr(2:end),0];
-        temp(ii) = 0;
+%         temp(ii) = 0;
     elseif(numStops>numSchools)
-        flagStop = true;
+%         flagStop = true;
         flagArr = [flagArr(2:end),1];
-        temp(ii) = 1;
+%         temp(ii) = 1;
     else
-        flagSchool = true;
+%         flagSchool = true;
         flagArr = [flagArr(2:end),2];
-        temp(ii) = 2;
+%         temp(ii) = 2;
     end
-    
-    if(sum(flagArr == 0) > size(flagArr,1)/2)
-        ii = ii + 1
-        continue;
-    elseif(sum(flagArr == 1)>size(flagArr,1)/2 && sum(flagArr(end-1:end) == 0) == 2)
+%     && sum(flagArr(end-1:end) == 0) == 2
+    if(sum(flagArr == 1)>2 )
         %Stop
         fwrite(udpSystem2,1);
-    elseif(sum(flagArr == 2)>size(flagArr,1)/2)
+        disp('stop')
+        pause(5)
+        flagArr = zeros(1,5);
+%         size(flagArr,1)/2
+    elseif(sum(flagArr == 2)>=1)
         %School
         fwrite(udpSystem2,2);
+        disp('school')
+        pause(2)
+        flagArr = zeros(1,5);
     end
     %     if(bbStop == 0 && bbSchool == 0)
     %         falgNothing = true;
@@ -120,6 +125,6 @@ while (1)
     %     else
     %         fwrite(udpSystem2,0);
     %     end
-    ii = ii + 1
+    ii = ii + 1;
     drawnow
 end

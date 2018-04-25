@@ -1,29 +1,38 @@
-clc
-clear
+clear;
 close all
+fclose(instrfindall);
+
 i=0;
 K1=1;
 K2=1;
 
-IPsystem1 = '192.168.1.249';
-IPsystem2 = '192.168.1.250';
+IPsystem1 = '198.21.234.24';
+IPsystem2 = '192.168.56.1';
 portSystem1 = 9090;
 portSystem2 = 9091;
 dataqueue = zeros(1,5);
 udpSystem1 = udp(ipSystem2,portSystem2,'LocalPort',portSystem1);
 
 Cam=webcam(1);
-Cam.Resolution='1920x1080'
+Cam.Resolution='1920x1080';
 a=arduino('COM5','UNO','Libraries','servo')
 V=servo(a,'D12','MinPulseDuration',1e-3,'MaxPulseDuration',2e-3);
 S=servo(a,'D13','MinPulseDuration',1e-3,'MaxPulseDuration',2e-3);
 Left =[0,0];Right =[0,0];
 EC=zeros(4,4);
-vel=0.57;
+vel1=0.57;
+vel2=0.56;
 vel2 = 0.56;
 EQ=[0.19,0.0,0.0,0.0;0,0.09,00,00;0.0,0.0,0.08,0.0;0,00,0,0.0001;];
 ER=[0.029,0.0,0.0,0.0;0,0.001,00,00;0.0,0,0.0029,0.0;0,00,0,0.0002;];
+flagSchool = false;
+flagStop = false;
 while (1)
+    if flagStop == true
+        pause(2);
+        flagStop = false;
+    end
+    vel = vel1;
     i=i+1;
     p=snapshot(Cam);
     sh=size(p);
@@ -116,9 +125,30 @@ while (1)
     Xm=((Yr)-Middle(2))/Middle(1);
     Xl=((Yr)-Left(2))/Left(1);
     Xri=((Yr)-Right(2))/Right(1);
-    D=(Xr-Xm)
+    D=(Xr-Xm);
     Steer=-K1*angle+K2*D;
     Steer=(Steer+90)/180;
+    
+    if udpB.BytesAvailable> 0
+        data = fread(udpB, udpB.BytesAvailable);
+        flushinput(udpB)
+        if data == 'STOP'
+            writePosition(V,0.5);
+            pause(0.5);
+            flagStop = true;
+        elseif data == 'SCHOOL'
+            flagSchool = true;
+            iterSchool = 0;
+        end
+    end
+    if (flagSchool == true && iterSchool < 20)
+        vel = vel2;
+        iterSchool = iterSchool + 1;
+    else
+        iterSchool = 0;
+        flagSchool = false;
+    end
+    
     writePosition(V,vel);
     writePosition(S,Steer);
     drawnow
